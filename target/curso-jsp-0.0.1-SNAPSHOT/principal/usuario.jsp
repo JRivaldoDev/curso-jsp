@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" pageEncoding="ISO-8859-1"%>
 
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 
@@ -192,13 +191,6 @@
 	$("#rendaMensal").focus();
 	
 	$('#nome').focus();
-	
-	var dataNascimento = document.getElementById("#dataNascimento").value;
-	
-	if(dataNascimento != null && dataNascimento != ''){
-		var dateFormat = new Date($("#dataNascimento").val());
-		$("#dataNascimento").val(dateFormat.toLocaleDateString('pt-BR', {timeZone: 'UTC'}));
-	}
 	
 	
 	$( function() {

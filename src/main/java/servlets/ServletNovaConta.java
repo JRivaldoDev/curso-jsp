@@ -42,6 +42,7 @@ public class ServletNovaConta extends HttpServlet {
 		modelLogin.setLogin(login);
 		modelLogin.setSenha(senha);
 		modelLogin.setSexo(sexo);
+		modelLogin.setPerfil("SECRETARIO");
 
 		try {
 			if(!daoUsuarioRepository.existeUsuario(login)) {

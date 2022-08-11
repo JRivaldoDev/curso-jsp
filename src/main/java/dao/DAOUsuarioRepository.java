@@ -93,7 +93,7 @@ public class DAOUsuarioRepository {
 		
 		try {
 			
-			String sql = "INSERT INTO model_login(login, senha, nome, email, sexo) VALUES (?, ?, ?, ?, ?);";
+			String sql = "INSERT INTO model_login(login, senha, nome, email, sexo, perfil) VALUES (?, ?, ?, ?, ?, ?);";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			
 			statement.setString(1, modelLogin.getLogin());
@@ -101,6 +101,7 @@ public class DAOUsuarioRepository {
 			statement.setString(3, modelLogin.getNome());
 			statement.setString(4, modelLogin.getEmail());
 			statement.setString(5, modelLogin.getSexo());
+			statement.setString(6, modelLogin.getPerfil());
 						
 			statement.execute();
 			connection.commit();
@@ -127,6 +128,10 @@ public class DAOUsuarioRepository {
 				if(modelLogin.getFotoUser() != null && !modelLogin.getFotoUser().isEmpty()) {
 					statement.setString(6, modelLogin.getFotoUser());
 					statement.setString(7, modelLogin.getExtensaoFotoUser());
+				}
+				else {
+					statement.setString(6, "");
+					statement.setString(7, "");
 				}
 				if(modelLogin.getDataNascimento() != null) {
 					statement.setDate(8, modelLogin.getDataNascimento());
@@ -218,7 +223,7 @@ public class DAOUsuarioRepository {
 	public List<ModelLogin> buscarListUsuariosPaginada(String nome, int offset) {
 		try {
 			List<ModelLogin> usuarios = new ArrayList<ModelLogin>();
-			String sql = "select * from model_login where lower(nome) like lower(?) and useradmin is false order by nome offset " + offset +" limit 3";
+			String sql = "select * from model_login where lower(nome) like lower(?) and useradmin is false order by nome offset " + offset +" limit 5";
 			PreparedStatement statement = connection.prepareStatement(sql);
 			statement.setString(1, "%"+ nome +"%");
 									
@@ -322,7 +327,7 @@ public class DAOUsuarioRepository {
 	public List<ModelLogin> listarUsuarios() {
 		try {
 			List<ModelLogin> usuarios = new ArrayList<ModelLogin>();
-			String sql = "select * from model_login where useradmin is false order by nome limit 3;";
+			String sql = "select * from model_login where useradmin is false order by nome limit 5;";
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
 									
@@ -434,7 +439,7 @@ public class DAOUsuarioRepository {
 	public List<ModelLogin> listarUsuariosPaginada(int offset) {
 		try {
 			List<ModelLogin> usuarios = new ArrayList<ModelLogin>();
-			String sql = "select * from model_login where useradmin is false order by nome offset " + offset +" limit 3";
+			String sql = "select * from model_login where useradmin is false order by nome offset " + offset +" limit 5";
 			
 			PreparedStatement statement = connection.prepareStatement(sql);
 									

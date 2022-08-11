@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" pageEncoding="ISO-8859-1"%>
 
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 
@@ -229,7 +228,7 @@
 													<nav aria-label="Page navigation example">
 													  <ul class="pagination">
 													   <c:forEach begin="1" end="${totalPaginas}" step="1" varStatus="loop">
-													    <li class="page-item"><a class="page-link" href="<%=request.getContextPath()%>/ServletBancoDeUsuarios?acao=paginar&offset=${(loop.count - 1) * 3}">${loop.count}</a></li>
+													    <li class="page-item"><a class="page-link" href="<%=request.getContextPath()%>/ServletBancoDeUsuarios?acao=paginar&offset=${(loop.count - 1) * 5}">${loop.count}</a></li>
 													    </c:forEach>
 													  </ul>
 													</nav>
@@ -316,15 +315,8 @@
 		
 		$('#nome').focus();
 		
-		var dataNascimento = document.getElementById("#dataNascimento").value;
 		
-		if(dataNascimento != null && dataNascimento != ''){
-			var dateFormat = new Date($("#dataNascimento").val());
-			$("#dataNascimento").val(dateFormat.toLocaleDateString('pt-BR', {timeZone: 'UTC'}));
-		}
-		
-		
-		$( function() {
+		$(function() {
 			  
 			  $("#dataNascimento").datepicker({
 				    dateFormat: 'dd/mm/yy',
