@@ -276,7 +276,7 @@
 			    </tr>
 			  </thead>
 			  <tbody>
-			     <c:forEach items='${listaModelLogin}' var='mL'>
+			     <c:forEach items='${listaModelLogin2}' var='mL'>
 			    	<tr>
 			    	<td> <c:out value="${mL.id}"></c:out> </td>
 			    	<td> <c:out value="${mL.nome}"></c:out> </td>

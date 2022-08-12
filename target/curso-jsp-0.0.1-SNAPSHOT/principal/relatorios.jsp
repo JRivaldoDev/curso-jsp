@@ -68,7 +68,7 @@
 													</div>
 
 												</form>
-												
+												<div><h6 style="color: red"> ${msgRel}</h6></div>
 												<div style="height: 300px;overflow: scroll;">
 													<table class="table" id="tabelaListaUsuarios">
 													  <thead>
