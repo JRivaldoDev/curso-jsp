@@ -70,6 +70,7 @@ public class ServletRelatorioController extends HttpServlet {
 
 	}
 
+	@SuppressWarnings("null")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -84,9 +85,11 @@ public class ServletRelatorioController extends HttpServlet {
 
 				if (dataInicial.isEmpty() && dataFinal.isEmpty()) {
 					request.setAttribute("usuariosRel", daoUsuarioRepository.listarUsuariosRel());
+					
 
 				} 
-				else if (dataInicial.contains("/")) {
+				else if ((dataInicial.contains("/") && dataFinal.contains("/") )
+						&& (!dataInicial.isEmpty() && !dataFinal.isEmpty())) {
 
 					dataI = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
 							.format(new SimpleDateFormat("dd/MM/yyyy").parse(dataInicial)));
@@ -96,22 +99,11 @@ public class ServletRelatorioController extends HttpServlet {
 					request.setAttribute("usuariosRel", daoUsuarioRepository.listarUsuariosRelData(dataI, dataF));
 					request.setAttribute("dataInicial", dataInicial);
 					request.setAttribute("dataFinal", dataFinal);
-				} 
-				else {
-					dataI = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(dataInicial);
-					dataF = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(dataFinal);
-
-					dataInicial = Date.valueOf(new SimpleDateFormat("dd/MM/yyyy")
-							.format(new SimpleDateFormat("yyyy-MM-dd").parse(dataInicial))).toString();
-					dataFinal = Date.valueOf(new SimpleDateFormat("dd/MM/yyyy")
-							.format(new SimpleDateFormat("yyyy-MM-dd").parse(dataInicial))).toString();
-					request.setAttribute("usuariosRel", daoUsuarioRepository.listarUsuariosRelData(dataI, dataF));
-
-					request.setAttribute("dataInicial", dataInicial);
-					request.setAttribute("dataFinal", dataFinal);
-
 				}
-
+				
+				request.setAttribute("dataInicial", dataInicial);
+				request.setAttribute("dataFinal", dataFinal);
+				request.setAttribute("msgRel", "Não existe usuários correspondente às datas informadas!");
 				request.getRequestDispatcher("/principal/relatorios.jsp").forward(request, response);
 				
 			} 
@@ -122,7 +114,9 @@ public class ServletRelatorioController extends HttpServlet {
 					logins = daoUsuarioRepository.listarUsuariosRel();
 
 				} 
-				else if (dataInicial.contains("/")) {
+				else if ((dataInicial.contains("/") && dataFinal.contains("/") )
+						&& (!dataInicial.isEmpty() && !dataFinal.isEmpty())) {
+					
 					dataI = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
 							.format(new SimpleDateFormat("dd/MM/yyyy").parse(dataInicial)));
 					dataF = Date.valueOf(new SimpleDateFormat("yyyy-MM-dd")
@@ -130,25 +124,27 @@ public class ServletRelatorioController extends HttpServlet {
 
 					logins = daoUsuarioRepository.listarUsuariosRelData(dataI, dataF);
 				} 
+				
+				if(logins != null && !logins.isEmpty()) {
+					byte[] relatorio = null;
+					String tipo = "";
+					HashMap<String, Object> params = new HashMap<String, Object>();
+					params.put("PARAM_SUB_REPORT", request.getServletContext().getRealPath("relatorios") + File.separator);
+
+					if (acao.equalsIgnoreCase("imprimirPdf")) {
+						relatorio = new ReportUtil().geraRelatorioPDF(logins, "rel-user", params,
+								request.getServletContext());
+						tipo = ".pdf";
+					}
+
+					response.setHeader("Content-Disposition", "attachment;filename=arquivo" + tipo);
+					response.getOutputStream().write(relatorio);
+				}
 				else {
-					dataI = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(dataInicial);
-					dataF = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(dataFinal);
-					logins = daoUsuarioRepository.listarUsuariosRelData(dataI, dataF);
+					request.setAttribute("msgRel", "Não existe usuários correspondente às datas informadas!");
+					request.getRequestDispatcher("/principal/relatorios.jsp").forward(request, response);
 				}
-
-				byte[] relatorio = null;
-				String tipo = "";
-				HashMap<String, Object> params = new HashMap<String, Object>();
-				params.put("PARAM_SUB_REPORT", request.getServletContext().getRealPath("relatorios") + File.separator);
-
-				if (acao.equalsIgnoreCase("imprimirPdf")) {
-					relatorio = new ReportUtil().geraRelatorioPDF(logins, "rel-user", params,
-							request.getServletContext());
-					tipo = ".pdf";
-				}
-
-				response.setHeader("Content-Disposition", "attachment;filename=arquivo" + tipo);
-				response.getOutputStream().write(relatorio);
+				
 
 			}
 		} catch (Exception e) {

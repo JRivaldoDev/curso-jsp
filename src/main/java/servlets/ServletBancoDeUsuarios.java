@@ -66,10 +66,10 @@ public class ServletBancoDeUsuarios extends HttpServlet {
 
 				String nomeBusca = request.getParameter("nomeBusca");
 				
-				List<ModelLogin> listaUsuarios = daoUsuarioRepository.buscarListUsuarios(nomeBusca);
+				List<ModelLogin> listaUsuarios2 = daoUsuarioRepository.buscarListUsuarios(nomeBusca);
 				
 				ObjectMapper mapper = new ObjectMapper();
-				String json = mapper.writeValueAsString(listaUsuarios);
+				String json = mapper.writeValueAsString(listaUsuarios2);
 				
 				response.getWriter().write(json);
 
