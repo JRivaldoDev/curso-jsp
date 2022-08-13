@@ -4,7 +4,7 @@
 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <jsp:include page="head.jsp"></jsp:include>
 
@@ -198,8 +198,10 @@
 													</div>
 													
 													<div><label></label></div>
-													<div><h6 style="color:green">${msg}</h6></div>
-													
+													<div>
+													<h6 style="color:green">${msg}</h6>
+													<h6 style="color:red">${msgErro}</h6>
+													</div>
 													<span></span>
 													<div><h4>Lista de Usuários</h4></div>
 													

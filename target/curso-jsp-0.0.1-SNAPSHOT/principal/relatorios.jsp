@@ -3,7 +3,7 @@
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <jsp:include page="head.jsp"></jsp:include>
 
@@ -62,7 +62,7 @@
 															id="dataFinal"	name="dataFinal" value="${dataFinal}">
 														</div>
 														<div class="col-auto">
-														<button type="submit" class="btn btn-primary mb-2">Imprimir</button>
+														<button type="submit" class="btn btn-primary mb-2">Mostrar</button>
 														<button type="button" onclick="imprimirPdf()" class="btn btn-primary mb-2">Imprimir PDF</button>
 													</div>
 													</div>

@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <jsp:include page="head.jsp"></jsp:include>
 

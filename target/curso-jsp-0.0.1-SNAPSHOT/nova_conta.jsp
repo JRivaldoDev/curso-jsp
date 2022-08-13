@@ -9,18 +9,9 @@
 <title>Nova Conta</title>
 
 <style type="text/css">
-form {
-	
-	font-family: Cursive;
-}
-
-h1 {
-	font-family: Cursive;
-}
 
 h6 {
 	color: red;
-	font-family: Cursive;
 }
 
 </style>
