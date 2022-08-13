@@ -85,7 +85,6 @@ public class ServletRelatorioController extends HttpServlet {
 
 				if (dataInicial.isEmpty() && dataFinal.isEmpty()) {
 					request.setAttribute("usuariosRel", daoUsuarioRepository.listarUsuariosRel());
-					
 
 				} 
 				else if ((dataInicial.contains("/") && dataFinal.contains("/") )
@@ -97,13 +96,17 @@ public class ServletRelatorioController extends HttpServlet {
 							.format(new SimpleDateFormat("dd/MM/yyyy").parse(dataFinal)));
 
 					request.setAttribute("usuariosRel", daoUsuarioRepository.listarUsuariosRelData(dataI, dataF));
-					request.setAttribute("dataInicial", dataInicial);
-					request.setAttribute("dataFinal", dataFinal);
+					
+					if(daoUsuarioRepository.listarUsuariosRelData(dataI, dataF).size() <= 0) {
+						request.setAttribute("msgRel", "Não existe usuários correspondente às datas informadas!");
+					}
+				}
+				else {
+					request.setAttribute("msgRel", "Por favor informe duas datas válidas nos respectivos campos ou faça uma consulta sem datas para pesquisar todos os usuários!");
 				}
 				
 				request.setAttribute("dataInicial", dataInicial);
 				request.setAttribute("dataFinal", dataFinal);
-				request.setAttribute("msgRel", "Não existe usuários correspondente às datas informadas!");
 				request.getRequestDispatcher("/principal/relatorios.jsp").forward(request, response);
 				
 			} 
@@ -136,7 +139,7 @@ public class ServletRelatorioController extends HttpServlet {
 								request.getServletContext());
 						tipo = ".pdf";
 					}
-
+					
 					response.setHeader("Content-Disposition", "attachment;filename=arquivo" + tipo);
 					response.getOutputStream().write(relatorio);
 				}

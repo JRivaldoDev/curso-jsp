@@ -55,10 +55,14 @@ public class ServletBancoDeUsuarios extends HttpServlet {
 			else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
 
 				String idUser = request.getParameter("iduser");
-
-				daoUsuarioRepository.deletarUsuario(idUser);
-
-				response.getWriter().write("Operação concluída com sucesso!");
+				
+				if(!idUser.isEmpty()) {
+					daoUsuarioRepository.deletarUsuario(idUser);
+					response.getWriter().write("Operação concluída com sucesso!");
+				}
+				else {
+					response.getWriter().write("Operação inválida!");
+				}
 
 			} 
 			
@@ -147,61 +151,65 @@ public class ServletBancoDeUsuarios extends HttpServlet {
 		ModelLogin modelLogin = new ModelLogin();
 		ModelEndereco endereco = new ModelEndereco();
 
-		modelLogin.setId(Long.parseLong(id));
-		modelLogin.setNome(nome);
-		modelLogin.setEmail(email);
-		modelLogin.setLogin(login);
-		modelLogin.setSenha(senha);
-		modelLogin.setPerfil(perfil);
-		modelLogin.setSexo(sexo);
-		
-		if(data.length > 1) {
-			String dataNascimento = data[2]+"-"+data[1]+"-"+data[0];
-			modelLogin.setDataNascimento(Date.valueOf(LocalDate.parse(dataNascimento)));
+		if(id.isEmpty()) {
+			request.setAttribute("msgErro", "Operação inválida!!!");
 		}
-		else if(daoUsuarioRepository.buscarUsuarioID(id).getDataNascimento() != null) {
-			modelLogin.setDataNascimento(daoUsuarioRepository.buscarUsuarioID(id).getDataNascimento());
-		}
-		if (!renda.isEmpty()) {
-			modelLogin.setRendaMensal(Double.parseDouble(renda));
-		}
-		
-		endereco.setCep(cep);
-		endereco.setUf(uf);
-		endereco.setCidade(cidade);
-		endereco.setRua(rua);
-		endereco.setBairro(bairro);
-		endereco.setNumero(numero);
-		
-		modelLogin.setEndereco(endereco);
-		
-		if(request.getPart("fileFoto") != null) {
+		else {
+			modelLogin.setId(Long.parseLong(id));
+			modelLogin.setNome(nome);
+			modelLogin.setEmail(email);
+			modelLogin.setLogin(login);
+			modelLogin.setSenha(senha);
+			modelLogin.setPerfil(perfil);
+			modelLogin.setSexo(sexo);
 			
-			Part part = request.getPart("fileFoto");
-			byte[] foto = IOUtils.toByteArray(part.getInputStream());
-			String contentType = part.getContentType();
+			if(data.length > 1) {
+				String dataNascimento = data[2]+"-"+data[1]+"-"+data[0];
+				modelLogin.setDataNascimento(Date.valueOf(LocalDate.parse(dataNascimento)));
+			}
+			else if(daoUsuarioRepository.buscarUsuarioID(id).getDataNascimento() != null) {
+				modelLogin.setDataNascimento(daoUsuarioRepository.buscarUsuarioID(id).getDataNascimento());
+			}
+			if (!renda.isEmpty()) {
+				modelLogin.setRendaMensal(Double.parseDouble(renda));
+			}
 			
-			if(!contentType.equalsIgnoreCase("application/octet-stream")) {
-				String imagemBase64 ="data:" + contentType + ";base64," + new Base64().encodeBase64String(foto);
+			endereco.setCep(cep);
+			endereco.setUf(uf);
+			endereco.setCidade(cidade);
+			endereco.setRua(rua);
+			endereco.setBairro(bairro);
+			endereco.setNumero(numero);
+			
+			modelLogin.setEndereco(endereco);
+			
+			if(request.getPart("fileFoto") != null) {
 				
-				modelLogin.setFotoUser(imagemBase64);
-				modelLogin.setExtensaoFotoUser(contentType.split("\\/")[1]);
-			}
-			else {
-				modelLogin.setFotoUser(daoUsuarioRepository.buscarUsuario(login).getFotoUser());
-				modelLogin.setExtensaoFotoUser(daoUsuarioRepository.buscarUsuario(login).getExtensaoFotoUser());
+				Part part = request.getPart("fileFoto");
+				byte[] foto = IOUtils.toByteArray(part.getInputStream());
+				String contentType = part.getContentType();
+				
+				if(!contentType.equalsIgnoreCase("application/octet-stream")) {
+					String imagemBase64 ="data:" + contentType + ";base64," + new Base64().encodeBase64String(foto);
+					
+					modelLogin.setFotoUser(imagemBase64);
+					modelLogin.setExtensaoFotoUser(contentType.split("\\/")[1]);
+				}
+				else {
+					modelLogin.setFotoUser(daoUsuarioRepository.buscarUsuario(login).getFotoUser());
+					modelLogin.setExtensaoFotoUser(daoUsuarioRepository.buscarUsuario(login).getExtensaoFotoUser());
+				}
+				
 			}
 			
-			
+			daoUsuarioRepository.editarUsuario(modelLogin);
+			request.setAttribute("msg", "Operação realizada com sucesso!");
+			request.setAttribute("modelLogin2", modelLogin);
 		}
 
-		daoUsuarioRepository.editarUsuario(modelLogin);
-		
 		List<ModelLogin> lista = daoUsuarioRepository.listarUsuarios();
 		request.getSession().setAttribute("listaModelLogin", lista);
-		request.setAttribute("modelLogin2", modelLogin);
 		request.getSession().setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas());
-		request.setAttribute("msg", "Operação realizada com sucesso!");
 		request.getRequestDispatcher("/principal/banco_de_usuarios.jsp").forward(request, response);
 
 	}
