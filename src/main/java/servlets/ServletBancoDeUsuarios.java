@@ -39,29 +39,17 @@ public class ServletBancoDeUsuarios extends HttpServlet {
 
 			String acao = request.getParameter("acao");
 
-			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletar")) {
-				String idUser = request.getParameter("id");
-								
-				daoUsuarioRepository.deletarUsuario(idUser);
-				
-				List<ModelLogin> lista = daoUsuarioRepository.listarUsuarios();
-				request.getSession().setAttribute("listaModelLogin", lista);
-				request.getSession().setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas());
-				request.setAttribute("msg", "Operação realizada com sucesso!");
-				request.setAttribute("modelLogin2", new ModelLogin());
-				request.getRequestDispatcher("/principal/banco_de_usuarios.jsp").forward(request, response);
-			}
 
-			else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
+			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
 
 				String idUser = request.getParameter("iduser");
 				
 				if(!idUser.isEmpty()) {
 					daoUsuarioRepository.deletarUsuario(idUser);
-					response.getWriter().write("Operação concluída com sucesso!");
+					response.getWriter().write("OperaÃ§Ã£o concluÃ­da com sucesso!");
 				}
 				else {
-					response.getWriter().write("Operação inválida!");
+					response.getWriter().write("OperaÃ§Ã£oo invÃ¡lida!");
 				}
 
 			} 
@@ -95,7 +83,7 @@ public class ServletBancoDeUsuarios extends HttpServlet {
 				List<ModelLogin> lista = daoUsuarioRepository.listarUsuarios();
 				request.getSession().setAttribute("listaModelLogin", lista);
 				request.getSession().setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas());
-				request.setAttribute("msg", "Usuários carregados!");
+				request.setAttribute("msg", "UsuÃ¡rios carregados!");
 				request.getRequestDispatcher("/principal/banco_de_usuarios.jsp").forward(request, response);
 
 			} else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("paginar")) {
@@ -104,7 +92,7 @@ public class ServletBancoDeUsuarios extends HttpServlet {
 				List<ModelLogin> lista = daoUsuarioRepository.listarUsuariosPaginada(offset);
 				request.getSession().setAttribute("listaModelLogin", lista);
 				request.getSession().setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas());
-				request.setAttribute("msg", "Usuários carregados!");
+				request.setAttribute("msg", "UsuÃ¡rios carregados!");
 				request.getRequestDispatcher("/principal/banco_de_usuarios.jsp").forward(request, response);
 			}
 			
@@ -123,94 +111,110 @@ public class ServletBancoDeUsuarios extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		String id = request.getParameter("id");
-		String nome = request.getParameter("nome");
-		String email = request.getParameter("email");
-		String login = request.getParameter("login");
-		String senha = request.getParameter("senha");
-		String perfil = request.getParameter("perfil");
-		String sexo = request.getParameter("sexo");
-		String[] data = {};
-		String renda = "";
 		
-		if(request.getParameter("dataNascimento") != null) {
-			data = request.getParameter("dataNascimento").split("/");
-		}
-		if(request.getParameter("rendaMensal") != null) {
-			renda = request.getParameter("rendaMensal").replace("R$", "").replace(" ","").replace(".", "").replace(",", ".");
-		}
+		String acao = request.getParameter("acao");
 		
-		String cep = request.getParameter("cep");
-		String uf = request.getParameter("uf");
-		String cidade = request.getParameter("cidade");
-		String rua = request.getParameter("rua");
-		String bairro = request.getParameter("bairro");
-		String numero = request.getParameter("numero");
-
-		ModelLogin modelLogin = new ModelLogin();
-		ModelEndereco endereco = new ModelEndereco();
-
-		if(id.isEmpty()) {
-			request.setAttribute("msgErro", "Operação inválida!!!");
+		if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletar")) {
+			String idUser = request.getParameter("id");
+							
+			daoUsuarioRepository.deletarUsuario(idUser);
+			
+			List<ModelLogin> lista = daoUsuarioRepository.listarUsuarios();
+			request.getSession().setAttribute("listaModelLogin", lista);
+			request.getSession().setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas());
+			request.setAttribute("msg", "OperaÃ§Ã£o realizada com sucesso!");
+			request.setAttribute("modelLogin2", new ModelLogin());
+			request.getRequestDispatcher("/principal/banco_de_usuarios.jsp").forward(request, response);
 		}
 		else {
-			modelLogin.setId(Long.parseLong(id));
-			modelLogin.setNome(nome);
-			modelLogin.setEmail(email);
-			modelLogin.setLogin(login);
-			modelLogin.setSenha(senha);
-			modelLogin.setPerfil(perfil);
-			modelLogin.setSexo(sexo);
+			String id = request.getParameter("id");
+			String nome = request.getParameter("nome");
+			String email = request.getParameter("email");
+			String login = request.getParameter("login");
+			String senha = request.getParameter("senha");
+			String perfil = request.getParameter("perfil");
+			String sexo = request.getParameter("sexo");
+			String[] data = {};
+			String renda = "";
 			
-			if(data.length > 1) {
-				String dataNascimento = data[2]+"-"+data[1]+"-"+data[0];
-				modelLogin.setDataNascimento(Date.valueOf(LocalDate.parse(dataNascimento)));
+			if(request.getParameter("dataNascimento") != null) {
+				data = request.getParameter("dataNascimento").split("/");
 			}
-			else if(daoUsuarioRepository.buscarUsuarioID(id).getDataNascimento() != null) {
-				modelLogin.setDataNascimento(daoUsuarioRepository.buscarUsuarioID(id).getDataNascimento());
-			}
-			if (!renda.isEmpty()) {
-				modelLogin.setRendaMensal(Double.parseDouble(renda));
+			if(request.getParameter("rendaMensal") != null) {
+				renda = request.getParameter("rendaMensal").replace("R$", "").replace(" ","").replace(".", "").replace(",", ".");
 			}
 			
-			endereco.setCep(cep);
-			endereco.setUf(uf);
-			endereco.setCidade(cidade);
-			endereco.setRua(rua);
-			endereco.setBairro(bairro);
-			endereco.setNumero(numero);
-			
-			modelLogin.setEndereco(endereco);
-			
-			if(request.getPart("fileFoto") != null) {
-				
-				Part part = request.getPart("fileFoto");
-				byte[] foto = IOUtils.toByteArray(part.getInputStream());
-				String contentType = part.getContentType();
-				
-				if(!contentType.equalsIgnoreCase("application/octet-stream")) {
-					String imagemBase64 ="data:" + contentType + ";base64," + new Base64().encodeBase64String(foto);
-					
-					modelLogin.setFotoUser(imagemBase64);
-					modelLogin.setExtensaoFotoUser(contentType.split("\\/")[1]);
-				}
-				else {
-					modelLogin.setFotoUser(daoUsuarioRepository.buscarUsuario(login).getFotoUser());
-					modelLogin.setExtensaoFotoUser(daoUsuarioRepository.buscarUsuario(login).getExtensaoFotoUser());
-				}
-				
-			}
-			
-			daoUsuarioRepository.editarUsuario(modelLogin);
-			request.setAttribute("msg", "Operação realizada com sucesso!");
-			request.setAttribute("modelLogin2", modelLogin);
-		}
+			String cep = request.getParameter("cep");
+			String uf = request.getParameter("uf");
+			String cidade = request.getParameter("cidade");
+			String rua = request.getParameter("rua");
+			String bairro = request.getParameter("bairro");
+			String numero = request.getParameter("numero");
 
-		List<ModelLogin> lista = daoUsuarioRepository.listarUsuarios();
-		request.getSession().setAttribute("listaModelLogin", lista);
-		request.getSession().setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas());
-		request.getRequestDispatcher("/principal/banco_de_usuarios.jsp").forward(request, response);
+			ModelLogin modelLogin = new ModelLogin();
+			ModelEndereco endereco = new ModelEndereco();
+
+			if(id.isEmpty()) {
+				request.setAttribute("msgErro", "OperaÃ§Ã£oo invÃ¡lida!!!");
+			}
+			else {
+				modelLogin.setId(Long.parseLong(id));
+				modelLogin.setNome(nome);
+				modelLogin.setEmail(email);
+				modelLogin.setLogin(login);
+				modelLogin.setSenha(senha);
+				modelLogin.setPerfil(perfil);
+				modelLogin.setSexo(sexo);
+				
+				if(data.length > 1) {
+					String dataNascimento = data[2]+"-"+data[1]+"-"+data[0];
+					modelLogin.setDataNascimento(Date.valueOf(LocalDate.parse(dataNascimento)));
+				}
+				else if(daoUsuarioRepository.buscarUsuarioID(id).getDataNascimento() != null) {
+					modelLogin.setDataNascimento(daoUsuarioRepository.buscarUsuarioID(id).getDataNascimento());
+				}
+				if (!renda.isEmpty()) {
+					modelLogin.setRendaMensal(Double.parseDouble(renda));
+				}
+				
+				endereco.setCep(cep);
+				endereco.setUf(uf);
+				endereco.setCidade(cidade);
+				endereco.setRua(rua);
+				endereco.setBairro(bairro);
+				endereco.setNumero(numero);
+				
+				modelLogin.setEndereco(endereco);
+				
+				if(request.getPart("fileFoto") != null) {
+					
+					Part part = request.getPart("fileFoto");
+					byte[] foto = IOUtils.toByteArray(part.getInputStream());
+					String contentType = part.getContentType();
+					
+					if(!contentType.equalsIgnoreCase("application/octet-stream")) {
+						String imagemBase64 ="data:" + contentType + ";base64," + new Base64().encodeBase64String(foto);
+						
+						modelLogin.setFotoUser(imagemBase64);
+						modelLogin.setExtensaoFotoUser(contentType.split("\\/")[1]);
+					}
+					else {
+						modelLogin.setFotoUser(daoUsuarioRepository.buscarUsuario(login).getFotoUser());
+						modelLogin.setExtensaoFotoUser(daoUsuarioRepository.buscarUsuario(login).getExtensaoFotoUser());
+					}
+					
+				}
+				
+				daoUsuarioRepository.editarUsuario(modelLogin);
+				request.setAttribute("msg", "OperaÃ§Ã£o realizada com sucesso!");
+				request.setAttribute("modelLogin2", modelLogin);
+			}
+
+			List<ModelLogin> lista = daoUsuarioRepository.listarUsuarios();
+			request.getSession().setAttribute("listaModelLogin", lista);
+			request.getSession().setAttribute("totalPaginas", daoUsuarioRepository.totalPaginas());
+			request.getRequestDispatcher("/principal/banco_de_usuarios.jsp").forward(request, response);
+		}
 
 	}
 

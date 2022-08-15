@@ -98,11 +98,11 @@ public class ServletRelatorioController extends HttpServlet {
 					request.setAttribute("usuariosRel", daoUsuarioRepository.listarUsuariosRelData(dataI, dataF));
 					
 					if(daoUsuarioRepository.listarUsuariosRelData(dataI, dataF).size() <= 0) {
-						request.setAttribute("msgRel", "Não existe usuários correspondente às datas informadas!");
+						request.setAttribute("msgRel", "NÃ£o existe usuÃ¡rios correspondente Ã s datas informadas!");
 					}
 				}
 				else {
-					request.setAttribute("msgRel", "Por favor informe duas datas válidas nos respectivos campos ou faça uma consulta sem datas para pesquisar todos os usuários!");
+					request.setAttribute("msgRel", "Por favor informe duas datas vÃ¡lidas nos respectivos campos ou faÃ§a uma consulta sem datas para pesquisar todos os usuÃ¡rios!");
 				}
 				
 				request.setAttribute("dataInicial", dataInicial);
@@ -144,7 +144,7 @@ public class ServletRelatorioController extends HttpServlet {
 					response.getOutputStream().write(relatorio);
 				}
 				else {
-					request.setAttribute("msgRel", "Não existe usuários correspondente às datas informadas!");
+					request.setAttribute("msgRel", "NÃ£o existe usuÃ¡rios correspondente Ã s datas informadas!");
 					request.getRequestDispatcher("/principal/relatorios.jsp").forward(request, response);
 				}
 				

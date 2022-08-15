@@ -108,9 +108,9 @@ public class ServletUsuarioController extends HttpServlet {
 		daoUsuarioRepository.editarUsuario(modelLogin);
 		
 		request.getSession().setAttribute("usuario", modelLogin.getNome());
-		request.setAttribute("msg", "OperaÁ„o realizada com sucesso!");
+		request.setAttribute("msg", "Opera√ß√£o realizada com sucesso!");
 		request.getSession().setAttribute("modelLogin", modelLogin);
-		request.getSession().setAttribute("tituloPagina", "Usu·rio");
+		request.getSession().setAttribute("tituloPagina", "Usu√°rio");
 		request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
 				
 	}

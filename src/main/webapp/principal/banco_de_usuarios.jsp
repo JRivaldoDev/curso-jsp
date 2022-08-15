@@ -190,7 +190,7 @@
 													<button type="submit"
 														class="btn btn-success waves-effect waves-light">Salvar</button>
 													<button type="button"
-														class="btn btn-danger waves-effect waves-light" onclick="deletarUsuarioAjax();">Deletar</button>
+														class="btn btn-danger waves-effect waves-light" onclick="deletarUsuario();">Deletar</button>
 													<c:if test="${modelLogin2.id > 0}">
 													<a href="<%=request.getContextPath()%>/ServletTelefones?idUser=${modelLogin2.id}" class="btn btn-dark">Telefones</a>
 													</c:if>
@@ -420,7 +420,6 @@
 	
 		function deletarUsuario(){
 			if (confirm("Deseja excluir o usuário?")){
-				document.getElementById("formUsuarios").method = "get";
 				document.getElementById("acao").value = "deletar";
 				document.getElementById("formUsuarios").submit();
 			}

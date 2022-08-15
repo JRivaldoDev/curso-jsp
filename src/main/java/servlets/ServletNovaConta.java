@@ -57,7 +57,7 @@ public class ServletNovaConta extends HttpServlet {
 			}
 			else {
 				RequestDispatcher redirecionar = request.getRequestDispatcher("/nova_conta.jsp");
-				request.setAttribute("msg", "J· existe um usu·rio cadastrado com este login!");
+				request.setAttribute("msg", "J√° existe um usu√°rio cadastrado com este login!");
 				request.setAttribute("modelLogin", modelLogin);
 				redirecionar.forward(request, response);
 			}
