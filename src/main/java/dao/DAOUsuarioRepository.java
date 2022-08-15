@@ -585,7 +585,7 @@ public class DAOUsuarioRepository {
 			resultSet.next();
 			
 			Double usuarios = resultSet.getDouble("total");
-			Double paginas = 3.0;
+			Double paginas = 5.0;
 			
 			totalPaginas = usuarios / paginas;
 			

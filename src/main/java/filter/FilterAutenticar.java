@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 @WebFilter(urlPatterns = {"/principal/*","/ServletBancoDeUsuarios"})
 public class FilterAutenticar extends HttpFilter {
     
+	private static final long serialVersionUID = 1L;
 	private static Connection connection;
 	
     public FilterAutenticar() {
@@ -34,7 +35,7 @@ public class FilterAutenticar extends HttpFilter {
 		}
 	}
 	
-	//validar e fazer o redirecionamento de páginas
+	//validar e fazer o redirecionamento de pï¿½ginas
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		try {
 			
@@ -43,12 +44,13 @@ public class FilterAutenticar extends HttpFilter {
 			
 			String usuarioLogado = (String) session.getAttribute("login");
 			String urlParaAutenticar = request2.getServletPath();
-			//valida se está logado, se não redireciona para a tela de login
+			//valida se estï¿½ logado, se nï¿½o redireciona para a tela de login
 			if((usuarioLogado == null || usuarioLogado.equalsIgnoreCase("null"))
 					&& !urlParaAutenticar.equalsIgnoreCase("/principal/ServletLogin")) {
 				
 				RequestDispatcher redirecionar = request.getRequestDispatcher("/index.jsp?url="+urlParaAutenticar);
 				request.setAttribute("msg", "Por favor realize o login!");
+				request.setAttribute("url", urlParaAutenticar);
 				redirecionar.forward(request, response);
 				return;			
 			}else {
