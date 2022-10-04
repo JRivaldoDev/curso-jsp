@@ -7,39 +7,76 @@ CREATE DATABASE "curso-jsp"
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
     
-CREATE TABLE IF NOT EXISTS public.model_login
-(
-    login character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    senha character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    id integer NOT NULL DEFAULT nextval('model_login_id_seq'::regclass),
-    nome character varying(300) COLLATE pg_catalog."default" NOT NULL,
-    email character varying(300) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT model_login_pkey PRIMARY KEY (id),
-    CONSTRAINT login_unique UNIQUE (login)
-)
+CREATE TABLE public.model_endereco (
+    cep character varying(255),
+    uf character varying(255),
+    cidade character varying(255),
+    rua character varying(255),
+    bairro character varying(255),
+    numero character varying(255),
+    id_usuario bigint NOT NULL
+);
 
-TABLESPACE pg_default;
+CREATE TABLE public.model_login (
+    login character varying(200) NOT NULL,
+    senha character varying(200) NOT NULL,
+    id integer NOT NULL,
+    nome character varying(300) NOT NULL,
+    email character varying(300) NOT NULL,
+    useradmin boolean DEFAULT false NOT NULL,
+    usuario_id bigint DEFAULT 1 NOT NULL,
+    perfil character varying(255),
+    sexo character varying(255),
+    fotouser text,
+    extensaofotouser character varying(255),
+    datanascimento date,
+    rendamensal double precision
+);
 
-ALTER TABLE IF EXISTS public.model_login
-    OWNER to postgres;
+CREATE SEQUENCE public.model_login_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+ALTER SEQUENCE public.model_login_id_seq OWNED BY public.model_login.id;
+
+CREATE SEQUENCE public.telefone_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    MAXVALUE 2147483647
+    CACHE 1;
+
+CREATE TABLE public.telefone (
+    id integer DEFAULT nextval('public.telefone_seq'::regclass) NOT NULL,
+    numero character varying(255) NOT NULL,
+    usuario_id bigint NOT NULL
+);
+
+ALTER TABLE ONLY public.model_login ALTER COLUMN id SET DEFAULT nextval('public.model_login_id_seq'::regclass);
+
+
+ALTER TABLE ONLY public.model_login
+    ADD CONSTRAINT login_unique UNIQUE (login);
+
+ALTER TABLE ONLY public.model_login
+    ADD CONSTRAINT model_login_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.telefone
+    ADD CONSTRAINT telefone_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY public.model_endereco
+    ADD CONSTRAINT model_endereco_id_usuario_fkey FOREIGN KEY (id_usuario) REFERENCES public.model_login(id);
+
+ALTER TABLE ONLY public.telefone
+    ADD CONSTRAINT telefone_fkey FOREIGN KEY (usuario_id) REFERENCES public.model_login(id);
+
+ALTER TABLE ONLY public.model_login
+    ADD CONSTRAINT usuario_fk FOREIGN KEY (usuario_id) REFERENCES public.model_login(id);
+
     
-INSERT INTO public.model_login(
-	login, senha)
-	VALUES ('admin','admin');
-
-alter table model_login add column usuario_id bigint not null default 1;
-
-alter table model_login add constraint usuario_fk foreign key (usuario_id) references model_login (id);
-
-create table telefone(
-
-    id integer not null default nextval('telefone_seq'::regclass),
-    numero character varying (255) not null,
-    usuario_id bigint not null,
+INSERT INTO public.model_login (login, senha, id, nome, email, useradmin, usuario_id, perfil, sexo, fotouser, extensaofotouser, datanascimento, rendamensal) VALUES ('admin', 'admin', 1, 'Administrador', 'admin@email.com', true, 1, 'ADMIN', NULL, NULL, NULL, NULL, NULL);
     
-    constraint telefone_pkey primary key (id),
-    constraint telefone_fkey foreign key (usuario_id) references model_login(id)
-    
-)
-
-
